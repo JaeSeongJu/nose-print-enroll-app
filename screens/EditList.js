@@ -62,7 +62,9 @@ export default ({ navigation, route }) => {
           }
         }}
       >
-        <Text style={{ color: "black", fontWeight: "bold" }}>Save</Text>
+        <Text style = {{color: "white", fontSize:24, fontWeight: "bold"}}>
+          Save
+        </Text>
       </TouchableOpacity>
     </View>
   );

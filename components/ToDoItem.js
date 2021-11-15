@@ -49,29 +49,22 @@ const EditableText = ({ isChecked, onChangeText, text, isNewItem }) => {
   );
 };
 
-export default ({
-  text,
-  isChecked,
-  onChecked,
-  onChangeText,
-  onDelete,
-  isNewItem,
-}) => {
-  return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: "row", flex: 1 }}>
-        <Checkbox isChecked={isChecked} onChecked={onChecked} />
-        <EditableText
-          text={text}
-          onChangeText={onChangeText}
-          isChecked={isChecked}
-          isNewItem={isNewItem}
-        />
-      </View>
-      <TouchableOpacity onPress={onDelete}>
-        <Text style={[styles.icon, { color: Colors.red }]}>X</Text>
-      </TouchableOpacity>
-      {/*Remove*/}
+export default({ text, isChecked, onChecked, onChangeText, onDelete, isNewItem}) => {
+    return(
+    <View style = {styles.container}>
+        <View style = {{flexDirection: "row", flex: 1}}>
+            <Checkbox isChecked = {isChecked} onChecked={onChecked}/>
+            <EditableText 
+                text = {text} 
+                onChangeText = {onChangeText}
+                isChecked = {isChecked}
+                isNewItem = {isNewItem}
+            />
+        </View>
+        <TouchableOpacity onPress = {onDelete}>
+             <Text style = {[styles.icon, {color: Colors.red}]}>X</Text>
+        </TouchableOpacity>
+        {/*Remove*/}
     </View>
   );
 };

@@ -1,37 +1,42 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Image,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useLayoutEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Ionicons } from  "@expo/vector-icons"
 import Colors from "../constants/Colors";
-import axios from "axios";
-import { baseUrl, userId } from "../utils/api";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
+/* import { Avatar } from 'react-native-image-avatars'; */
+import { Avatar } from 'react-native-paper';
 
-const ListButton = ({ title, color, onPress, onDelete, onOptions }) => {
-  const logoPath = require("../assets/dog.png");
-  return (
-    <TouchableOpacity
-      style={[styles.itemContainer, { backgroundColor: color }]}
-      onPress={onPress}
+
+
+const ListButton = ( {title, color, onPress, onDelete, onOptions} ) => {
+ 
+  logoPath = require('../assets/dog.png'); //Editlist 이미지 
+
+  return(
+    <TouchableOpacity 
+        style = {[styles.itemContainer, {backgroundColor: color}]}
+        onPress = {onPress}
     >
-      <View>
-        <Text style={styles.itemTitle}> {title} </Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity onPress={onOptions}>
-          <Image style={styles.image} source={logoPath} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onDelete}>
-          <Ionicons name="trash-outline" size={24} color="#000000" />
-        </TouchableOpacity>
-      </View>
+      
+    <View >
+    <Avatar.Image
+      source = {require('../assets/권푸근.jpg')}
+      size={80}
+      style={styles.avatarImg}
+    />
+    </View>
+    <View>
+      <Text style = {styles.profileTitle}> {title} </Text>
+    </View>
+    <View style = {{flexDirection : "row", paddingRight : 100}}> 
+    <TouchableOpacity onPress = {onOptions}>
+      {/*  <Ionicons name = "dog" size = {24} color = "#000000"/> */}
+      <Image style = {styles.editImage} source={logoPath} size = {20}  />
+    </TouchableOpacity> 
+      <TouchableOpacity onPress = {onDelete}>
+        <Ionicons name = "trash-outline" size = {30} color = "#000000"/>
+      </TouchableOpacity> 
+    </View>
+
     </TouchableOpacity>
   );
 };
@@ -48,13 +53,17 @@ const renderAddListIcon = (navigation, addItemToLists) => {
   );
 }; // +버튼
 
-export default ({ navigation }) => {
-  const [lists, setLists] = useState([]);
-
-  const addItemToLists = (item) => {
-    lists.push(item);
-    setLists([...lists]);
-  };
+export default ( {navigation} ) => {
+    const [lists, setLists] = useState([
+      {title: "권푸근", color: Colors.gray},
+      {title: "최몽실", color: Colors.gray},
+     // {title: "강아지3", color: Colors.gray},
+    ]);
+    
+    const addItemToLists = (item) =>{
+      lists.push(item);
+      setLists([...lists]);
+    }
 
   const removeItemFromLists = async (index, petID) => {
     await axios.delete(`${baseUrl}/pet/${petID}`);
@@ -107,16 +116,30 @@ export default ({ navigation }) => {
               onDelete={() => removeItemFromLists(index, petID)} // delete 기능
             />
           );
-        }}
-      />
-    </SafeAreaView>
-  );
-};
+         }}
+         />
+        </SafeAreaView>
+     );
+  }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  avatarImg: {
+    /* marginTop: 5, */
+  },
+  editImage: {
+    width: 30,
+    height: 30,
+    flex: 1,
+  },
+  profileTitle: {
+    marginRight: 150,
+    fontSize: 20,
+    padding: 5,
+    color: "black"
   },
   itemTitle: { fontSize: 24, padding: 5, color: "black" },
   image: {
