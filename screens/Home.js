@@ -11,6 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import axios from "axios";
 import { baseUrl, userId } from "../utils/api";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ListButton = ({ title, color, onPress, onDelete, onOptions }) => {
   const logoPath = require("../assets/dog.png");
@@ -24,7 +26,6 @@ const ListButton = ({ title, color, onPress, onDelete, onOptions }) => {
       </View>
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity onPress={onOptions}>
-          {/*  <Ionicons name = "dog" size = {24} color = "#000000"/> */}
           <Image style={styles.image} source={logoPath} />
         </TouchableOpacity>
         <TouchableOpacity onPress={onDelete}>
@@ -67,9 +68,9 @@ export default ({ navigation }) => {
   };
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => renderAddListIcon(navigation, addItemToLists),
-    });
+    // navigation.setOptions({
+    //   headerRight: () => renderAddListIcon(navigation, addItemToLists),
+    // });
   });
 
   useEffect(() => {
@@ -82,7 +83,9 @@ export default ({ navigation }) => {
   }, [lists]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Ionicons name="menu" size={24} color="black" />
+      <Text>My Pet</Text>
       <FlatList
         data={lists}
         keyExtractor={(item) => item.petID}
@@ -106,7 +109,7 @@ export default ({ navigation }) => {
           );
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
