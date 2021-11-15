@@ -4,7 +4,7 @@ import { Ionicons } from  "@expo/vector-icons"
 import ToDoItem from "../components/ToDoItem"
 import Colors from "../constants/Colors";
 import { FloatingLabelInput } from 'react-native-floating-label-input';
-
+import { Avatar } from 'react-native-paper';
 
 
 const renderAddListIcon = (addItem) => {
@@ -58,10 +58,18 @@ export default ({navigation}) => {
                     비문을 등록해주세요
       </Text>
       <ScrollView>
-      <Text  style = {styles.infoprofile}> 
+    <View  style = {styles.infoprofile}>
+      <Avatar.Image
+        source = {require('../assets/권푸근.jpg')}
+        size={80}
+        style={styles.avatarImg}
+      />
+    <Text style= {styles.profileTitle}> 
       {name}{"\n"}
       {breed}/{age}
-      </Text>   
+    </Text>   
+    </View>    
+      
       <FloatingLabelInput
         label="ID NUMBER"
         value={idNumber}
@@ -74,13 +82,22 @@ export default ({navigation}) => {
         hintTextColor={'#aaa'}
         //mask="99 (99) 99999-9999"
         hint="98765-4321"
-        /* containerStyles={{
-          borderWidth: 2,
+        containerStyles={{
+          borderWidth: 1,
           paddingHorizontal: 10,
           backgroundColor: '#fff',
-          borderColor: '#white',
+          borderColor: 'white', // 그 input contaunter line 색, or 핑크색
           borderRadius: 8,
-        }} */
+          marginBottom: 15,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height:0.5,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3,
+          elevation: 5,
+        }}
         customLabelStyles={{
           colorFocused: 'red',
           fontSizeFocused: 12,
@@ -105,7 +122,24 @@ export default ({navigation}) => {
         onTogglePassword={(bool) => {
           console.log(bool);
         }}
+        containerStyles={{
+          borderWidth: 1,
+          paddingHorizontal: 10,
+          backgroundColor: '#fff',
+          borderColor: 'white', 
+          borderRadius: 8,
+          marginBottom: 15,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height:0.5,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3,
+          elevation: 5,
+        }}
         customLabelStyles={{
+
           colorFocused: 'red',
           fontSizeFocused: 12,
         }}
@@ -128,6 +162,22 @@ export default ({navigation}) => {
         staticLabel
         onTogglePassword={(bool) => {
           console.log(bool);
+        }}
+        containerStyles={{
+          borderWidth: 1,
+          paddingHorizontal: 10,
+          backgroundColor: '#fff',
+          borderColor: 'white',
+          borderRadius: 8,
+          marginBottom: 15,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height:0.5,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3,
+          elevation: 5,
         }}
         customLabelStyles={{
           colorFocused: 'red',
@@ -152,6 +202,21 @@ export default ({navigation}) => {
         staticLabel
         onTogglePassword={(bool) => {
           console.log(bool);
+        }}
+        containerStyles={{
+          borderWidth: 1,
+          paddingHorizontal: 10,
+          backgroundColor: '#fff',
+          borderColor: 'white', 
+          borderRadius: 8,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height:0.5,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3,
+          elevation: 5,
         }}
         customLabelStyles={{
           colorFocused: 'red',
@@ -198,7 +263,7 @@ export default ({navigation}) => {
       </View>
       
       <TouchableOpacity style = {styles.saveButton} onPress = {() => {}}>
-        <Text style = {{color: "black", fontSize:24, fontWeight: "bold"}}>
+        <Text style = {{color: "white", fontSize:24, fontWeight: "bold"}}>
           Save
         </Text>
       </TouchableOpacity>     
@@ -212,6 +277,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
+        paddingHorizontal: 10,
+    },
+    profileTitle: {
+      marginRight: 150,
+      fontSize: 20,
+      padding: 5,
+      color: "black"
     },
     icon: {
         padding: 5,
@@ -227,12 +299,14 @@ const styles = StyleSheet.create({
       //fontWeight: "bold"
     },
     infoprofile: {
-      borderWidth: 0.3,
+      //borderWidth: 0.3,
       //borderColor: '#777',
       backgroundColor: Colors.gray,
       padding: 20,
       margin: 15,
-      width: 350,
+      width: 378,
+      /* paddingLeft: 80, */
+
       
     },
     input: {
@@ -256,5 +330,7 @@ const styles = StyleSheet.create({
       margin: 16,
       justifyContent: "center",
       alignItems: "center",
+      //width: 380,
+
     },
   });

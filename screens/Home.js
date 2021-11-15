@@ -1,25 +1,41 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Ionicons } from  "@expo/vector-icons"
 import Colors from "../constants/Colors";
+/* import { Avatar } from 'react-native-image-avatars'; */
+import { Avatar } from 'react-native-paper';
 
 
 
 const ListButton = ( {title, color, onPress, onDelete, onOptions} ) => {
+ 
+  logoPath = require('../assets/dog.png'); //Editlist 이미지 
+
   return(
     <TouchableOpacity 
         style = {[styles.itemContainer, {backgroundColor: color}]}
         onPress = {onPress}
     >
-      <View ><Text style = {styles.itemTitle}> {title} </Text></View>
-      <View style = {{flexDirection : "row"}}> 
-        <TouchableOpacity onPress = {onOptions}>
-          <Ionicons name = "options-outline" size = {24} color = "#000000"/>
-        </TouchableOpacity> 
-        <TouchableOpacity onPress = {onDelete}>
-          <Ionicons name = "trash-outline" size = {24} color = "#000000"/>
-        </TouchableOpacity> 
-      </View>
+      
+    <View >
+    <Avatar.Image
+      source = {require('../assets/권푸근.jpg')}
+      size={80}
+      style={styles.avatarImg}
+    />
+    </View>
+    <View>
+      <Text style = {styles.profileTitle}> {title} </Text>
+    </View>
+    <View style = {{flexDirection : "row", paddingRight : 100}}> 
+    <TouchableOpacity onPress = {onOptions}>
+      {/*  <Ionicons name = "dog" size = {24} color = "#000000"/> */}
+      <Image style = {styles.editImage} source={logoPath} size = {20}  />
+    </TouchableOpacity> 
+      <TouchableOpacity onPress = {onDelete}>
+        <Ionicons name = "trash-outline" size = {30} color = "#000000"/>
+      </TouchableOpacity> 
+    </View>
 
     </TouchableOpacity>
   );
@@ -36,9 +52,9 @@ const renderAddListIcon = (navigation, addItemToLists) => {
 
 export default ( {navigation} ) => {
     const [lists, setLists] = useState([
-      {title: "강아지1", color: Colors.gray},
-      {title: "강아지2", color: Colors.gray},
-      {title: "강아지3", color: Colors.gray},
+      {title: "권푸근", color: Colors.gray},
+      {title: "최몽실", color: Colors.gray},
+     // {title: "강아지3", color: Colors.gray},
     ]);
     
     const addItemToLists = (item) =>{
@@ -98,7 +114,20 @@ export default ( {navigation} ) => {
       flex: 1,
       backgroundColor: '#fff',
     },
-    itemTitle: {fontSize: 24, padding:5 , color: "black"},
+    avatarImg: {
+      /* marginTop: 5, */
+    },
+    editImage: {
+      width: 30,
+      height: 30,
+      flex: 1,
+    },
+    profileTitle: {
+      marginRight: 150,
+      fontSize: 20,
+      padding: 5,
+      color: "black"
+    },
 
     itemContainer: {
       flexDirection : "row",
