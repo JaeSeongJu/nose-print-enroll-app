@@ -54,8 +54,8 @@ export default function Album() {
       getImageMetaData: false, // true might perform slower results
       initialLoad: 100,
       assetsType: [MediaType.photo, MediaType.video],
-      minSelection: 1,
-      maxSelection: 3,
+      minSelection: 7,
+      maxSelection: 7,
       portraitCols: 4,
       landscapeCols: 4,
     }),
