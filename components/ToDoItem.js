@@ -42,7 +42,7 @@ export default({ text, isChecked, onChecked, onChangeText, onDelete, isNewItem})
             />
         </View>
         <TouchableOpacity onPress = {onDelete}>
-             <Text style = {[styles.icon, {colot: Colors.red}]}>X</Text>
+             <Text style = {[styles.icon, {color: Colors.red}]}>X</Text>
         </TouchableOpacity>
         {/*Remove*/}
     </View>

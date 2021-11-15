@@ -42,7 +42,7 @@ export default ({navigation, route}) => {
                 setvalidity(false); 
             }
         }}>
-        <Text style = {{color: "black", fontSize:24, fontWeight: "bold"}}>
+        <Text style = {{color: "white", fontSize:24, fontWeight: "bold"}}>
           Save
         </Text>
       </TouchableOpacity> 
