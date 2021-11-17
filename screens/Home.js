@@ -1,184 +1,359 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
-import { Ionicons } from  "@expo/vector-icons"
-import Colors from "../constants/Colors";
-/* import { Avatar } from 'react-native-image-avatars'; */
-import { Avatar } from 'react-native-paper';
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { StatusBar } from "expo-status-bar";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { PanGestureHandler } from "react-native-gesture-handler";
+import { Avatar } from "react-native-paper";
+import Animated, {
+  runOnJS,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { baseUrl, userId } from "../utils/api";
+import { EnrollIcon } from "../utils/svg";
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.75;
 
+export default ({ navigation, route }) => {
+  const [lists, setLists] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-const ListButton = ( {title, color, onPress, onDelete, onOptions} ) => {
- 
-  logoPath = require('../assets/dog.png'); //Editlist 이미지 
-
-  return(
-    <TouchableOpacity 
-        style = {[styles.itemContainer, {backgroundColor: color}]}
-        onPress = {onPress}
-    >
-      
-    <View >
-    <Avatar.Image
-      source = {require('../assets/권푸근.jpg')}
-      size={80}
-      style={styles.avatarImg}
-    />
-    </View>
-    <View>
-      <Text style = {styles.profileTitle}> {title} </Text>
-    </View>
-    <View style = {{flexDirection : "row", paddingRight : 100}}> 
-    <TouchableOpacity onPress = {onOptions}>
-      {/*  <Ionicons name = "dog" size = {24} color = "#000000"/> */}
-      <Image style = {styles.editImage} source={logoPath} size = {20}  />
-    </TouchableOpacity> 
-      <TouchableOpacity onPress = {onDelete}>
-        <Ionicons name = "trash-outline" size = {30} color = "#000000"/>
-      </TouchableOpacity> 
-    </View>
-
-    </TouchableOpacity>
-  );
-};
-
-const renderAddListIcon = (navigation, addItemToLists) => {
-  return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("Edit", { saveChanges: addItemToLists })
-      }
-    >
-      <Text style={styles.icon}> + </Text>
-    </TouchableOpacity>
-  );
-}; // +버튼
-
-export default ( {navigation} ) => {
-    const [lists, setLists] = useState([
-      {title: "권푸근", color: Colors.gray},
-      {title: "최몽실", color: Colors.gray},
-     // {title: "강아지3", color: Colors.gray},
-    ]);
-    
-    const addItemToLists = (item) =>{
-      lists.push(item);
-      setLists([...lists]);
-    }
-
-  const removeItemFromLists = async (index, petID) => {
-    await axios.delete(`${baseUrl}/pet/${petID}`);
-    lists.splice(index, 1);
+  const addItemToLists = (item) => {
+    lists.push(item);
     setLists([...lists]);
   };
 
-  const updateItemFromLists = (index, item) => {
-    lists[index] = item;
-    setLists([...lists]);
-  };
+  // const updateItemFromLists = (index, item) => {
+  //   lists[index] = item;
+  //   setLists([...lists]);
+  // };
 
-  useLayoutEffect(() => {
-    // navigation.setOptions({
-    //   headerRight: () => renderAddListIcon(navigation, addItemToLists),
-    // });
-  });
+  // useLayoutEffect(() => {});
 
   useEffect(() => {
     async function fetchPetList() {
-      const res = await axios.get(`${baseUrl}/user/mypets/${userId}`);
-      setLists([...res.data]);
-      return res;
+      try {
+        const res = await axios.get(`${baseUrl}/user/mypets/${userId}`);
+        setLists([...res.data]);
+        // console.log(lists);
+        setLoading(false);
+        // if (route.params?.enroll) {
+
+        // }
+        // return res;
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchPetList();
-  }, [lists]);
+  }, [route.params?.enroll]);
+
+  const onDismiss = useCallback(async (pet) => {
+    setLists((lists) => lists.filter((item) => item["petID"] !== pet.petID));
+    await axios.delete(`${baseUrl}/pet/${pet.petID}`);
+  });
+
+  const scrollRef = useRef(null);
+
+  const renderItem = (item) => {
+    return (
+      <ListButton
+        pet={item}
+        simultaneousHandlers={scrollRef}
+        onDismiss={onDismiss}
+        onEdit={async () => {
+          navigation.navigate("Pet Info", { name: item.name });
+        }}
+      />
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Ionicons name="menu" size={24} color="black" />
-      <Text>My Pet</Text>
-      <FlatList
-        data={lists}
-        keyExtractor={(item) => item.petID}
-        renderItem={({ item: { name, petID }, index }) => {
-          return (
-            <ListButton
-              title={name}
-              color={Colors.gray}
-              navigation={navigation}
-              onPress={() => {
-                navigation.navigate("ToDoList", { name });
+      <StatusBar style="auto" />
+      <Ionicons
+        name="menu"
+        size={40}
+        color="black"
+        style={{ paddingLeft: "3%" }}
+      />
+      <Text style={styles.title}>My Pet</Text>
+      <View>
+        {lists.length !== 0 && isLoading ? (
+          <>
+            <ActivityIndicator />
+            <View
+              style={[
+                styles.enrollContainer,
+                { marginTop: lists.length === 0 ? 10 : 20 },
+              ]}
+            >
+              <Text
+                style={{ fontWeight: "bold", color: "#C4C4C4", fontSize: 13 }}
+              >
+                펫을 등록하고, 정보를 입력해 보세요
+              </Text>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 15, marginVertical: 5 }}
+              >
+                펫 등록하기
+              </Text>
+              <TouchableOpacity
+                style={styles.enrollBtn}
+                onPress={() =>
+                  navigation.navigate("Enroll Pet", { addItemToLists })
+                }
+              >
+                <EnrollIcon />
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <FlatList
+              ref={scrollRef}
+              style={{
+                flexGrow: 0,
+                minHeight: lists.length === 0 ? 0 : 80,
+                maxHeight: 400,
               }}
-              onOptions={() => {
-                navigation.navigate("Edit", {
-                  name,
-                  saveChanges: (item) => updateItemFromLists(index, item),
-                });
-              }} //editLISt navigation
-              onDelete={() => removeItemFromLists(index, petID)} // delete 기능
+              data={lists}
+              keyExtractor={(item) => item["petID"]}
+              renderItem={({ item, index }) => renderItem(item, index)}
+              showsHorizontalScrollIndicator={false}
             />
-          );
-         }}
-         />
-        </SafeAreaView>
-     );
-  }
+            <View
+              style={[
+                styles.enrollContainer,
+                { marginTop: lists.length === 0 ? 0 : 20 },
+              ]}
+            >
+              <Text
+                style={{ fontWeight: "bold", color: "#C4C4C4", fontSize: 13 }}
+              >
+                펫을 등록하고, 정보를 입력해 보세요
+              </Text>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 15, marginVertical: 5 }}
+              >
+                펫 등록하기
+              </Text>
+              <TouchableOpacity
+                style={styles.enrollBtn}
+                onPress={() =>
+                  navigation.navigate("Enroll Pet", { addItemToLists })
+                }
+              >
+                <EnrollIcon />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+      <Ionicons
+        name="person-circle"
+        size={50}
+        color="#FCA098"
+        style={styles.userInfo}
+      />
+    </SafeAreaView>
+  );
+};
+
+const ListButton = ({ pet, onEdit, onDismiss, simultaneousHandlers }) => {
+  const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
+  const translateX = useSharedValue(0);
+  const itemHeight = useSharedValue(80);
+  const marginVertical = useSharedValue(10);
+  const opacity = useSharedValue(1);
+
+  const panGesture = useAnimatedGestureHandler({
+    onActive: (event) => {
+      translateX.value = event.translationX;
+    },
+    onEnd: () => {
+      let shouldBeDismissed = translateX.value < TRANSLATE_X_THRESHOLD;
+      if (shouldBeDismissed) {
+        translateX.value = withTiming(-SCREEN_WIDTH);
+        itemHeight.value = withTiming(0);
+        marginVertical.value = withTiming(0);
+        opacity.value = withTiming(0, undefined, (isFinished) => {
+          if (isFinished && onDismiss) {
+            runOnJS(onDismiss)(pet);
+          }
+        });
+      } else {
+        translateX.value = withTiming(0);
+      }
+    },
+  });
+
+  const rStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: translateX.value,
+      },
+    ],
+  }));
+
+  const rIconContainerStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(
+      translateX.value < TRANSLATE_X_THRESHOLD ? 1 : 0
+    );
+    return { opacity };
+  });
+
+  const rTaskContainerStyle = useAnimatedStyle(() => {
+    return {
+      height: itemHeight.value,
+      marginVertical: marginVertical.value,
+      opacity: opacity.value,
+    };
+  });
+
+  return (
+    <Animated.View style={[styles.petContainer, rTaskContainerStyle]}>
+      <View style={[styles.removeIconContainer, rIconContainerStyle]}>
+        <Text style={{ fontSize: 20, marginRight: 10 }}>
+          밀어서 펫 정보를 삭제하세요
+        </Text>
+        <FontAwesome name="trash" size={25} color="black" />
+      </View>
+      <PanGestureHandler
+        simultaneousHandlers={simultaneousHandlers}
+        onGestureEvent={panGesture}
+      >
+        <AnimatedTouchable
+          style={[styles.pet, rStyle]}
+          onPress={onEdit}
+          activeOpacity={0.93}
+        >
+          <View>
+            <Avatar.Image
+              source={require("../assets/권푸근.jpg")}
+              size={60}
+              style={styles.petImg}
+            />
+          </View>
+          <View>
+            <Text style={styles.petName}>{pet.name}</Text>
+            {pet.age && pet.breed ? (
+              <Text style={styles.petDetail}>
+                {pet.breed} / {pet.age}살
+              </Text>
+            ) : (
+              <></>
+            )}
+          </View>
+          <View style={styles.noseIdCheck}>
+            {pet.noseID ? (
+              <TouchableOpacity>
+                <FontAwesome name="check" size={30} color="#85CF4E" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity>
+                <FontAwesome name="plus" size={30} color="#D65E4E" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </AnimatedTouchable>
+      </PanGestureHandler>
+    </Animated.View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  avatarImg: {
-    /* marginTop: 5, */
-  },
-  editImage: {
-    width: 30,
-    height: 30,
-    flex: 1,
-  },
-  profileTitle: {
-    marginRight: 150,
-    fontSize: 20,
-    padding: 5,
-    color: "black"
-  },
-  itemTitle: { fontSize: 24, padding: 5, color: "black" },
-  image: {
-    width: 40,
-    height: 40,
-    flex: 1,
-  },
-  itemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: 100,
-    flex: 1,
-    borderRadius: 20,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    padding: 15,
-  },
-  icon: {
-    padding: 5,
+  title: {
     fontSize: 24,
+    paddingLeft: "5%",
+    fontWeight: "bold",
   },
-  centeredView: {
-    justifyContent: "center",
+  petContainer: {
+    width: "100%",
     alignItems: "center",
-    marginTop: 50,
   },
-  modalView: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+  pet: {
+    width: "90%",
+    height: 80,
+    backgroundColor: "#E8E5E5",
+    flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
+    paddingHorizontal: 10,
+    borderRadius: 13,
+    shadowOpacity: 0.09,
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 17,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 10,
+  },
+  petImg: {
+    marginRight: 10,
+  },
+  petName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000",
+    marginBottom: 3,
+  },
+  petDetail: {
+    fontSize: 12,
+    color: "#717171",
+  },
+  noseIdCheck: {
+    position: "absolute",
+    right: 10,
+  },
+  enrollContainer: { width: "100%", alignItems: "center" },
+  enrollBtn: {
+    width: "90%",
+    height: 40,
+    borderRadius: 30,
+    backgroundColor: "#FCA098",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOpacity: 0.09,
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowRadius: 10,
+  },
+  userInfo: {
+    position: "absolute",
+    bottom: 20,
+    right: "5%",
+    shadowOpacity: 0.15,
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowRadius: 10,
+  },
+  removeIconContainer: {
+    height: 80,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    right: "10%",
   },
 });
