@@ -36,9 +36,19 @@ export default ({ navigation, route }) => {
     setLists([...lists]);
   };
 
-  // const updateItemFromLists = (index, item) => {
-  //   lists[index] = item;
-  //   setLists([...lists]);
+  // const updateItemFromLists = (item) => {
+  //   const list = lists.reduce(
+  //     (lists, { petID, ...rest }) => ({
+  //       ...lists,
+  //       ...{ [petID]: { petID, ...rest } },
+  //     }),
+  //     {}
+  //   );
+  //   console.log(list);
+
+  //   // item.forEach(({petID, ...rest}) => list[petID].activated = activated);
+
+  //   // setLists([...lists]);
   // };
 
   // useLayoutEffect(() => {});
@@ -75,7 +85,7 @@ export default ({ navigation, route }) => {
         simultaneousHandlers={scrollRef}
         onDismiss={onDismiss}
         onEdit={async () => {
-          navigation.navigate("Pet Info", { name: item.name });
+          navigation.navigate("Pet Info", { pet: item }); //updateItemFromLists
         }}
       />
     );

@@ -32,32 +32,12 @@ export default function App() {
           <Stack.Screen
             name="Pet Info"
             component={PetInfo}
-            options={({ route }) => {
-              return {
-                title: route.params.title, //버튼을 누르면 워내는 TODoList 라는 헤더가 되는데 이 줄이 버튼의 제목이 헤더로 가게 해준다 .
-                headerShown: false,
-                /* headerStyle:{
-              backgroundColor: route.params.color 
-            }, */ //색깔 종속되게 해줌
-                //headerTintColor: "white" //->헤더글색
-              };
-            }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Enroll Pet"
             component={EnrollPet}
-            options={({ route }) => {
-              return {
-                title: route.params.title
-                  ? route.params.title
-                  : "Create new list" /* 'Edit ${route.params.title}' */, //버튼을 누르면 워내는 TODoList 라는 헤더가 되는데 이 줄이 버튼의 제목이 헤더로 가게 해준다 .
-                headerShown: false,
-                /* headerStyle:{
-                backgroundColor: route.params.color || Colors.pink
-              }, */ //색깔 종속되게 해줌
-                //headerTintColor: "white" //->헤더글색
-              };
-            }}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </KeyboardAvoidingView>
