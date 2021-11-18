@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import storage from "./firebase";
 import photos from "./photos";
 import { SnapShotIcon, ViewDirectionIcon } from "./Svg";
 
@@ -57,15 +56,15 @@ export default function Snap({ route, navigation }) {
   };
 
   const upload = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const storageRef = storage.ref();
-      const spaceRef = storageRef.child("images/" + Date.now());
-      return spaceRef.put(blob);
-    } catch (error) {
-      alert(error);
-    }
+    // try {
+    //   const response = await fetch(uri);
+    //   const blob = await response.blob();
+    //   const storageRef = storage.ref();
+    //   const spaceRef = storageRef.child("images/" + Date.now());
+    //   return spaceRef.put(blob);
+    // } catch (error) {
+    //   alert(error);
+    // }
   };
 
   useEffect(() => {

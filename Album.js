@@ -4,21 +4,20 @@ import { AssetsSelector } from "expo-images-picker";
 import { MediaType } from "expo-media-library";
 import React, { useMemo } from "react";
 import { Alert } from "react-native";
-import storage from "./firebase";
 
 export default function Album() {
   const navigation = useNavigation();
 
   const upload = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const storageRef = storage.ref();
-      const spaceRef = storageRef.child("images/" + Date.now());
-      return spaceRef.put(blob);
-    } catch (error) {
-      alert(error);
-    }
+    // try {
+    //   const response = await fetch(uri);
+    //   const blob = await response.blob();
+    //   const storageRef = storage.ref();
+    //   const spaceRef = storageRef.child("images/" + Date.now());
+    //   return spaceRef.put(blob);
+    // } catch (error) {
+    //   alert(error);
+    // }
   };
 
   const onSuccess = (data) => {
