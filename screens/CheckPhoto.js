@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import photos, { savePhoto } from "./photos";
+import photos, { savePhoto } from "../photos";
 
 export default function CheckPhoto({ route, navigation }) {
   const { uri } = route.params;

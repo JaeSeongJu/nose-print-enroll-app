@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, Image, Text, View } from "react-native";
-import photos from "./photos";
+import photos from "../photos";
 
 const CheckRegister = () => {
   return (

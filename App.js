@@ -2,12 +2,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { KeyboardAvoidingView } from "react-native";
+import Album from "./screens/Album";
+import CheckPhoto from "./screens/CheckPhoto";
+import CheckRegister from "./screens/CheckRegister";
 import EnrollPet from "./screens/EnrollPet";
 import Home from "./screens/Home";
 import PetInfo from "./screens/PetInfo";
 import PhotoOption from "./screens/PhotoOption";
 import RefFrist from "./screens/RefFirst";
 import RefSecond from "./screens/RefSecond";
+import Snap from "./screens/Snap";
 
 const Stack = createStackNavigator();
 
@@ -50,26 +54,26 @@ export default function App() {
             component={PhotoOption}
             options={{ headerShown: false }}
           />
-            <Stack.Screen
-          name="Snap"
-          component={Snap}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Album"
-          component={Album}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CheckPhoto"
-          component={CheckPhoto}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CheckRegister"
-          component={CheckRegister}
-          options={{ headerShown: false }}
-        />
+          <Stack.Screen
+            name="Snap"
+            component={Snap}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Album"
+            component={Album}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CheckPhoto"
+            component={CheckPhoto}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CheckRegister"
+            component={CheckRegister}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </KeyboardAvoidingView>
     </NavigationContainer>

@@ -10,8 +10,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import photos from "./photos";
-import { SnapShotIcon, ViewDirectionIcon } from "./Svg";
+import photos from "../photos";
+import { SnapShotIcon, ViewDirectionIcon } from "../utils/Svg";
 
 const { width, height } = Dimensions.get("window");
 

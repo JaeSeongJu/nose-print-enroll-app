@@ -24,7 +24,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CacheImage from "../helpers/CacheImage";
 import { baseUrl, userId } from "../utils/api";
 import { defaultImg } from "../utils/photo";
-import { EnrollIcon } from "../utils/svg";
+import { EnrollIcon } from "../utils/Svg";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.75;
