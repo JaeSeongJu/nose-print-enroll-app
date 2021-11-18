@@ -50,6 +50,26 @@ export default function App() {
             component={PhotoOption}
             options={{ headerShown: false }}
           />
+            <Stack.Screen
+          name="Snap"
+          component={Snap}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Album"
+          component={Album}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CheckPhoto"
+          component={CheckPhoto}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CheckRegister"
+          component={CheckRegister}
+          options={{ headerShown: false }}
+        />
         </Stack.Navigator>
       </KeyboardAvoidingView>
     </NavigationContainer>
