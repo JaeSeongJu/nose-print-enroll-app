@@ -1,14 +1,16 @@
+import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
   Dimensions,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Avatar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CacheImage from "../helpers/CacheImage";
 import {
   exface,
   exfront1,
@@ -18,7 +20,6 @@ import {
   exright1,
   exright2,
 } from "../utils/photo";
-import { Ionicons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -66,13 +67,21 @@ const Process = ({ process, images, face }) => {
       >
         <Text style={styles.processText}> {process} </Text>
         <View style={styles.processPhotoContainer}>
-          {images.map((image) => (
-            <Avatar.Image
-              source={image}
-              size={100}
-              style={{ marginLeft: "5%" }}
-            />
-          ))}
+          {images.map((image) => {
+            const uri = Image.resolveAssetSource(image).uri;
+            return (
+              <CacheImage
+                uri={uri}
+                key={uri}
+                style={{
+                  width: 100,
+                  height: 100,
+                  marginLeft: "5%",
+                  borderRadius: 50,
+                }}
+              />
+            );
+          })}
         </View>
       </View>
     </>

@@ -6,13 +6,13 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import { Avatar } from "react-native-paper";
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
@@ -21,7 +21,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CacheImage from "../helpers/CacheImage";
 import { baseUrl, userId } from "../utils/api";
+import { defaultImg } from "../utils/photo";
 import { EnrollIcon } from "../utils/svg";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -242,6 +244,8 @@ const ListButton = ({
     };
   });
 
+  const defaultImgUri = Image.resolveAssetSource(defaultImg).uri;
+
   return (
     <Animated.View style={[styles.petContainer, rTaskContainerStyle]}>
       <View style={[styles.removeIconContainer, rIconContainerStyle]}>
@@ -260,10 +264,14 @@ const ListButton = ({
           activeOpacity={0.93}
         >
           <View>
-            <Avatar.Image
-              source={require("../assets/권푸근.jpg")}
-              size={60}
-              style={styles.petImg}
+            <CacheImage
+              uri={defaultImgUri}
+              style={{
+                width: 60,
+                height: 60,
+                marginRight: 10,
+                borderRadius: 30,
+              }}
             />
           </View>
           <View>

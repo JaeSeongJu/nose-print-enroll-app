@@ -2,16 +2,24 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { Dimensions, Keyboard, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Avatar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FloatingLabel from "../components/FloatingLabel";
+import CacheImage from "../helpers/CacheImage";
 import { baseUrl, userId } from "../utils/api";
+import { defaultImg } from "../utils/photo";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -58,6 +66,8 @@ export default ({ navigation, route }) => {
   //   });
   // });
 
+  const defaultImgUri = Image.resolveAssetSource(defaultImg).uri;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -77,10 +87,14 @@ export default ({ navigation, route }) => {
         <View style={styles.petContainer}>
           <View style={styles.pet}>
             <View>
-              <Avatar.Image
-                source={require("../assets/권푸근.jpg")}
-                size={60}
-                style={styles.petImg}
+              <CacheImage
+                uri={defaultImgUri}
+                style={{
+                  width: 60,
+                  height: 60,
+                  marginRight: 10,
+                  borderRadius: 30,
+                }}
               />
             </View>
             <View>
