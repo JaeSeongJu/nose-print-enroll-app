@@ -1,17 +1,13 @@
-import React from "react";
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { KeyboardAvoidingView } from "react-native";
+import EnrollPet from "./screens/EnrollPet";
 import Home from "./screens/Home";
 import PetInfo from "./screens/PetInfo";
-import EnrollPet from "./screens/EnrollPet";
-import Colors from "./constants/Colors";
+import PhotoOption from "./screens/PhotoOption";
+import RefFrist from "./screens/RefFirst";
+import RefSecond from "./screens/RefSecond";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +33,21 @@ export default function App() {
           <Stack.Screen
             name="Enroll Pet"
             component={EnrollPet}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Ref 1"
+            component={RefFrist}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Ref 2"
+            component={RefSecond}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Photo Option"
+            component={PhotoOption}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

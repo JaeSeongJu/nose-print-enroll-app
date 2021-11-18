@@ -99,7 +99,10 @@ export default ({ navigation, route }) => {
                   <FontAwesome name="check" size={30} color="#85CF4E" />
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Ref 1", { pet })}
+                  style={{ opacity: 1 }}
+                >
                   <FontAwesome name="plus" size={30} color="#D65E4E" />
                 </TouchableOpacity>
               )}

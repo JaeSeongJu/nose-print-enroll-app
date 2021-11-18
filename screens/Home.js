@@ -87,6 +87,7 @@ export default ({ navigation, route }) => {
         onEdit={async () => {
           navigation.navigate("Pet Info", { pet: item }); //updateItemFromLists
         }}
+        navigation={navigation}
       />
     );
   };
@@ -183,7 +184,13 @@ export default ({ navigation, route }) => {
   );
 };
 
-const ListButton = ({ pet, onEdit, onDismiss, simultaneousHandlers }) => {
+const ListButton = ({
+  pet,
+  onEdit,
+  onDismiss,
+  simultaneousHandlers,
+  navigation,
+}) => {
   const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
   const translateX = useSharedValue(0);
@@ -275,7 +282,10 @@ const ListButton = ({ pet, onEdit, onDismiss, simultaneousHandlers }) => {
                 <FontAwesome name="check" size={30} color="#85CF4E" />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Ref 1", { pet })}
+                style={{ opacity: 1 }}
+              >
                 <FontAwesome name="plus" size={30} color="#D65E4E" />
               </TouchableOpacity>
             )}
