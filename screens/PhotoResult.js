@@ -1,4 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
+import { CommonActions } from "@react-navigation/routers";
+import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -10,51 +12,76 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CacheImage from "../helpers/CacheImage";
-import {
-  exface,
-  exfront1,
-  exfront2,
-  exleft1,
-  exleft2,
-  exright1,
-  exright2,
-} from "../utils/photo";
+import photos from "../photos";
+import { flaskUrl, path } from "../utils/api";
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function RefSecond({ navigation, route }) {
-  const { pet } = route.params;
+const PhotoResult = ({ navigation, route }) => {
+  const { selectedPhoto, pet, snap } = route.params;
+  const selectedPhotos = [...selectedPhoto];
+  photos.length = 0;
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
         <Ionicons name="chevron-back" size={35} color="black" />
       </TouchableOpacity>
       <View style={styles.refContainer}>
-        <Process process={"정면"} images={[exfront1, exfront2]} />
-        <Process process={"오른쪽"} images={[exleft1, exleft2]} />
-        <Process process={"왼쪽"} images={[exright1, exright2]} />
-        <Process process={"얼굴"} images={[exface]} face />
+        <Process
+          process={"정면"}
+          images={[selectedPhotos[0], selectedPhotos[1]]}
+          snap={snap}
+        />
+        <Process
+          process={"오른쪽"}
+          images={[selectedPhotos[2], selectedPhotos[3]]}
+          snap={snap}
+        />
+        <Process
+          process={"왼쪽"}
+          images={[selectedPhotos[4], selectedPhotos[5]]}
+          snap={snap}
+        />
+        <Process
+          process={"얼굴"}
+          images={[selectedPhotos[6]]}
+          face
+          snap={snap}
+        />
       </View>
       <View style={styles.refSkipBtnContainer}>
         <TouchableOpacity
           style={styles.refSkipButton}
-          onPress={() => {
-            navigation.navigate("Photo Option", { pet });
+          onPress={async () => {
+            const res = await axios.post(`${flaskUrl}/register`, {
+              path,
+              petID: pet.petID,
+            });
+            console.log(res.data);
+            // navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 1,
+            //     routes: [{ name: "My Pet" }],
+            //   })
+            // );
           }}
         >
           <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
-            Skip
+            비문 등록하기
           </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-}
+};
 
-const Process = ({ process, images, face }) => {
+const Process = ({ process, images, face, snap }) => {
   return (
     <>
       <View
@@ -67,12 +94,11 @@ const Process = ({ process, images, face }) => {
       >
         <Text style={styles.processText}> {process} </Text>
         <View style={styles.processPhotoContainer}>
-          {images.map((image) => {
-            const uri = Image.resolveAssetSource(image).uri;
+          {images.map((image, index) => {
             return (
-              <CacheImage
-                uri={uri}
-                key={uri}
+              <Image
+                source={snap ? { uri: image } : image}
+                key={snap ? index + 1 : image.id}
                 style={{
                   width: 100,
                   height: 100,
@@ -140,3 +166,5 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 });
+
+export default PhotoResult;

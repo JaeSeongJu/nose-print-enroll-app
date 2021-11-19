@@ -1,18 +1,23 @@
 import styled from "@emotion/native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import photos, { savePhoto } from "../photos";
 
 export default function CheckPhoto({ route, navigation }) {
-  const { uri } = route.params;
+  const { uri, pet } = route.params;
   // Image.getSize(uri, (height) => console.log(height));
 
+  // console.log(photos.length);
   const usePhoto = () => {
     savePhoto(uri);
-    if (photos.length === 2) {
-      navigation.navigate("CheckRegister");
+    if (photos.length === 7) {
+      navigation.navigate("Photo Result", {
+        selectedPhoto: photos,
+        pet,
+        snap: true,
+      });
     } else {
       navigation.navigate("Snap", { next: true });
     }
@@ -24,7 +29,12 @@ export default function CheckPhoto({ route, navigation }) {
       <Preview>
         <PhotoView>
           <Image
-            style={{ width: "100%", height: "100%" }}
+            style={{
+              width: "100%",
+              height: "130%",
+              position: "absolute",
+              left: 0,
+            }}
             source={{
               uri,
             }}
@@ -54,6 +64,7 @@ const Preview = styled.View`
 
 const PhotoView = styled.View`
   flex: 8.7;
+  overflow: hidden;
 `;
 
 const MenuBar = styled.View`

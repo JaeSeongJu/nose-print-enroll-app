@@ -4,9 +4,11 @@ import { AssetsSelector } from "expo-images-picker";
 import { MediaType } from "expo-media-library";
 import React, { useMemo } from "react";
 import { Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Album() {
+export default function Album({ route }) {
   const navigation = useNavigation();
+  const { pet } = route.params;
 
   const upload = async (uri) => {
     // try {
@@ -21,18 +23,23 @@ export default function Album() {
   };
 
   const onSuccess = (data) => {
-    Alert.alert("Done", data.length + "Images selected");
-    data.forEach(async (info) => await upload(info.uri));
-    navigation.navigate("Home", { data });
+    // data.forEach(async (info) => await upload(info.uri));
+    navigation.navigate("Photo Result", {
+      selectedPhoto: data,
+      pet,
+      snap: false,
+    });
   };
 
   const _textStyle = {
     color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   };
 
   const _buttonStyle = {
-    backgroundColor: "orange",
-    borderRadius: 5,
+    backgroundColor: "#FCA098",
+    borderRadius: 20,
   };
 
   const widgetErrors = useMemo(
@@ -87,26 +94,30 @@ export default function Album() {
   const widgetNavigator = useMemo(
     () => ({
       Texts: {
-        finish: "finish",
-        back: "back",
-        selected: "selected",
+        finish: "선택완료",
+        back: "뒤로가기",
+        selected: "개 선택됨",
       },
-      midTextColor: "black",
+      midTextColor: "#FCA098",
       minSelection: 1,
       buttonTextStyle: _textStyle,
       buttonStyle: _buttonStyle,
-      onBack: () => {},
+      onBack: () => {
+        navigation.goBack();
+      },
       onSuccess: (e) => onSuccess(e),
     }),
     []
   );
 
   return (
-    <AssetsSelector
-      Settings={widgetSettings}
-      Errors={widgetErrors}
-      Styles={widgetStyles}
-      Navigator={widgetNavigator}
-    />
+    <SafeAreaView style={{ flex: 1 }}>
+      <AssetsSelector
+        Settings={widgetSettings}
+        Errors={widgetErrors}
+        Styles={widgetStyles}
+        Navigator={widgetNavigator}
+      />
+    </SafeAreaView>
   );
 }

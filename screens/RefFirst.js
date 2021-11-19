@@ -10,11 +10,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import CacheImage from "../helpers/CacheImage";
+import { refImg } from "../utils/photo";
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function RefFrist({ navigation, route }) {
   const { pet } = route.params;
+  const uri = Image.resolveAssetSource(refImg).uri;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -30,7 +34,14 @@ export default function RefFrist({ navigation, route }) {
           </Text>
         </View>
         <View>
-          <Image source={require("../assets/dognosereference.png")} />
+          <CacheImage
+            uri={uri}
+            style={{
+              width: windowWidth * 0.5,
+              height: windowWidth * 0.9,
+              marginBottom: 50,
+            }}
+          />
         </View>
       </View>
       <View style={styles.refSkipBtnContainer}>

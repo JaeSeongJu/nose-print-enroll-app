@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
+  Alert,
   Dimensions,
   StyleSheet,
   Text,
@@ -12,7 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function PhotoOption({ navigation }) {
+export default function PhotoOption({ navigation, route }) {
+  const { pet } = route.params;
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -26,10 +29,26 @@ export default function PhotoOption({ navigation }) {
           <Text style={styles.refTextBox2}>방법을 선택해주세요</Text>
         </View>
         <View style={styles.optionBtnContainer}>
-          <TouchableOpacity style={styles.touchableBtnDropOffItem}>
-            <Text style={{ color: "#ffffff", fontSize: 30 }}>GALLARY</Text>
+          <TouchableOpacity
+            style={styles.touchableBtnDropOffItem}
+            onPress={() => {
+              navigation.navigate("Album", { pet });
+              Alert.alert(
+                "1.정면 2.우측 3.좌측 4.얼굴",
+                "2장씩 순서대로 골라주세요! (얼굴은 1장)"
+              );
+            }}
+          >
+            <Text style={{ color: "#ffffff", fontSize: 30, marginBottom: 10 }}>
+              GALLARY
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.touchableBtnDropOffItem}>
+          <TouchableOpacity
+            style={styles.touchableBtnDropOffItem}
+            onPress={() => {
+              navigation.navigate("Snap", { pet, next: false });
+            }}
+          >
             <Ionicons style={styles.camera} name="camera" size={90} />
           </TouchableOpacity>
         </View>

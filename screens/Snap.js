@@ -1,3 +1,4 @@
+import { Entypo } from "@expo/vector-icons";
 import styled from "@emotion/native";
 import { Camera } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
@@ -5,24 +6,37 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
+  Image,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CacheImage from "../helpers/CacheImage";
 import photos from "../photos";
+import {
+  exface,
+  exfront1,
+  exfront2,
+  exleft1,
+  exleft2,
+  exright1,
+  exright2,
+} from "../utils/photo";
 import { SnapShotIcon, ViewDirectionIcon } from "../utils/Svg";
+import alram from "../assets/alram.mp3";
+import { Audio } from "expo-av";
 
 const { width, height } = Dimensions.get("window");
 
 const progressList = [
-  { id: "1", progress: "FRONT 1/7" },
-  { id: "2", progress: "FRONT 2/7" },
-  { id: "3", progress: "RIGHT 3/7" },
-  { id: "4", progress: "RIGHT 4/7" },
-  { id: "5", progress: "LEFT 5/7" },
-  { id: "6", progress: "LEFT 6/7" },
-  { id: "7", progress: "FACE 7/7" },
+  { id: "1", progress: "FRONT 1/7", defaultImg: exfront1 },
+  { id: "2", progress: "FRONT 2/7", defaultImg: exfront2 },
+  { id: "3", progress: "RIGHT 3/7", defaultImg: exright1 },
+  { id: "4", progress: "RIGHT 4/7", defaultImg: exright2 },
+  { id: "5", progress: "LEFT 5/7", defaultImg: exleft1 },
+  { id: "6", progress: "LEFT 6/7", defaultImg: exleft2 },
+  { id: "7", progress: "FACE 7/7", defaultImg: exface },
 ];
 
 export default function Snap({ route, navigation }) {
@@ -32,6 +46,8 @@ export default function Snap({ route, navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const progresses = useRef();
   const [progressIdx, setProgressIdx] = useState(0);
+  const [sound, setSound] = useState();
+  const { pet } = route.params;
 
   const snap = async () => {
     try {
@@ -40,7 +56,7 @@ export default function Snap({ route, navigation }) {
           quality: 1,
         });
         if (uri) {
-          navigation.navigate("CheckPhoto", { uri });
+          navigation.navigate("Check Photo", { uri, pet });
           // upload(uri)
           //   .then(() => {
           //     alert("success");
@@ -54,6 +70,13 @@ export default function Snap({ route, navigation }) {
       alert(error);
     }
   };
+
+  async function playSound() {
+    const { sound } = await Audio.Sound.createAsync(alram);
+    setSound(sound);
+
+    await sound.playAsync();
+  }
 
   const upload = async (uri) => {
     // try {
@@ -75,15 +98,20 @@ export default function Snap({ route, navigation }) {
           animated: true,
           viewPosition: 0.5,
         });
+      } else {
+        photos.length = 0;
       }
-    } else {
-      photos.length = 0;
     }
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-  }, [photos.length]);
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [photos.length, sound]);
 
   if (hasPermission === null) {
     return <View />;
@@ -112,7 +140,7 @@ export default function Snap({ route, navigation }) {
                 contentContainerStyle={{
                   paddingHorizontal: width / 2 - width / 10,
                 }}
-                renderItem={({ item: { progress }, index }) => {
+                renderItem={({ item: { progress, defaultImg }, index }) => {
                   const scrollToIndex = () => {
                     progresses.current?.scrollToIndex({
                       index,
@@ -144,7 +172,18 @@ export default function Snap({ route, navigation }) {
                           },
                           // { transform: [{ translateY }] },
                         ]}
-                      ></ProgressCircle>
+                      >
+                        <CacheImage
+                          uri={Image.resolveAssetSource(defaultImg).uri}
+                          key={Image.resolveAssetSource(defaultImg).uri}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 40,
+                            opacity: 0.7,
+                          }}
+                        />
+                      </ProgressCircle>
                     </TouchableOpacity>
                   );
                 }}
@@ -169,6 +208,12 @@ export default function Snap({ route, navigation }) {
             </DividingSection>
           </ProgressLine>
           <FeatureButtons>
+            <TouchableOpacity
+              style={{ position: "absolute", left: 15 }}
+              onPress={playSound}
+            >
+              <Entypo name="sound" size={40} color="white" />
+            </TouchableOpacity>
             <TouchableOpacity onPress={snap}>
               <SnapShotIcon />
             </TouchableOpacity>
@@ -211,7 +256,7 @@ const FocusingView = styled.View`
   flex: 7;
   justify-content: center;
   align-items: center;
-  border: 1px white solid;
+  /* border: 1px white solid; */
 `;
 
 const FocusingCircle = styled.View`
@@ -225,7 +270,7 @@ const FocusingCircle = styled.View`
 
 const ProgressLine = styled.View`
   flex: 1.7;
-  border: 1px white solid;
+  /* border: 1px white solid; */
   align-items: center;
 `;
 
@@ -238,7 +283,8 @@ const ProgressStr = styled.Text`
 const DividingSection = styled.View``;
 
 const ProgressCircle = styled(Animated.View)`
-  border: 1px #fff solid;
+  border: 2px #fff solid;
+  border-radius: 40px;
 `;
 
 const FeatureButtons = styled.View`

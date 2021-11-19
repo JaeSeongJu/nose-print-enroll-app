@@ -6,6 +6,7 @@ import exright1 from "../assets/exright1.jpeg";
 import exright2 from "../assets/exright2.jpeg";
 import exface from "../assets/exface.jpeg";
 import defaultImg from "../assets/권푸근.jpg";
+import refImg from "../assets/dognosereference.png";
 
 export {
   exfront1,
@@ -16,4 +17,5 @@ export {
   exright2,
   exface,
   defaultImg,
+  refImg,
 };

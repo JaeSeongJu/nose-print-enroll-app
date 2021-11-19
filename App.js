@@ -4,11 +4,11 @@ import React from "react";
 import { KeyboardAvoidingView } from "react-native";
 import Album from "./screens/Album";
 import CheckPhoto from "./screens/CheckPhoto";
-import CheckRegister from "./screens/CheckRegister";
 import EnrollPet from "./screens/EnrollPet";
 import Home from "./screens/Home";
 import PetInfo from "./screens/PetInfo";
 import PhotoOption from "./screens/PhotoOption";
+import PhotoResult from "./screens/PhotoResult";
 import RefFrist from "./screens/RefFirst";
 import RefSecond from "./screens/RefSecond";
 import Snap from "./screens/Snap";
@@ -65,13 +65,13 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="CheckPhoto"
+            name="Check Photo"
             component={CheckPhoto}
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="CheckRegister"
-            component={CheckRegister}
+            name="Photo Result"
+            component={PhotoResult}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
