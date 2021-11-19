@@ -63,13 +63,12 @@ const PhotoResult = ({ navigation, route }) => {
               path,
               petID: pet.petID,
             });
-            console.log(res.data);
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 1,
-            //     routes: [{ name: "My Pet" }],
-            //   })
-            // );
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{ name: "My Pet" }],
+              })
+            );
           }}
         >
           <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
